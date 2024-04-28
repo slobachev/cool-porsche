@@ -9,8 +9,8 @@ import { proxy, useSnapshot } from "valtio"
 const state = proxy({
   current: null,
   items: {
-    laces: "#ffffff",
-    mesh: "#ffffff",
+    "Material.002": "#ffffff",
+    "Material.020": "#ffffff",
     caps: "#ffffff",
     inner: "#ffffff",
     sole: "#ffffff",
@@ -26,16 +26,16 @@ function Shoe() {
   // Drei's useGLTF hook sets up draco automatically, that's how it differs from useLoader(GLTFLoader, url)
   // { nodes, materials } are extras that come from useLoader, these do not exist in threejs/GLTFLoader
   // nodes is a named collection of meshes, materials a named collection of materials
-  const { nodes, materials } = useGLTF("shoe-draco.glb")
+  const { nodes, materials, scene } = useGLTF("porshe.glb")
 
   // Animate model
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
-    ref.current.rotation.z = -0.2 - (1 + Math.sin(t / 1.5)) / 20
     ref.current.rotation.x = Math.cos(t / 4) / 8
     ref.current.rotation.y = Math.sin(t / 4) / 8
     ref.current.position.y = (1 + Math.sin(t / 1.5)) / 10
   })
+console.log(state.current);
 
   // Cursor showing current color
   const [hovered, set] = useState(null)
@@ -54,14 +54,8 @@ function Shoe() {
       onPointerOut={(e) => e.intersections.length === 0 && set(null)}
       onPointerMissed={() => (state.current = null)}
       onPointerDown={(e) => (e.stopPropagation(), (state.current = e.object.material.name))}>
-      <mesh geometry={nodes.shoe.geometry} material={materials.laces} material-color={snap.items.laces} />
-      <mesh geometry={nodes.shoe_1.geometry} material={materials.mesh} material-color={snap.items.mesh} />
-      <mesh geometry={nodes.shoe_2.geometry} material={materials.caps} material-color={snap.items.caps} />
-      <mesh geometry={nodes.shoe_3.geometry} material={materials.inner} material-color={snap.items.inner} />
-      <mesh geometry={nodes.shoe_4.geometry} material={materials.sole} material-color={snap.items.sole} />
-      <mesh geometry={nodes.shoe_5.geometry} material={materials.stripes} material-color={snap.items.stripes} />
-      <mesh geometry={nodes.shoe_6.geometry} material={materials.band} material-color={snap.items.band} />
-      <mesh geometry={nodes.shoe_7.geometry} material={materials.patch} material-color={snap.items.patch} />
+         <mesh geometry={nodes.Body.geometry} rotation={[Math.PI / 2, 0, 0]} material={materials["Material.002"]} material-color={snap.items["Material.002"]} />
+         <mesh geometry={nodes.RIM.geometry} rotation={[Math.PI / 2 , 0, 0]} material={materials["Material.020"]} material-color={snap.items["Material.020"]} />
     </group>
   )
 }
@@ -79,15 +73,17 @@ function Picker() {
 export default function App() {
   return (
     <>
-      <Canvas concurrent pixelRatio={[1, 1.5]} camera={{ position: [0, 0, 2.75] }}>
-        <ambientLight intensity={0.3} />
-        <spotLight intensity={0.3} angle={0.1} penumbra={1} position={[5, 25, 20]} />
+      <Canvas camera={{ position: [0, 5, 8]}}>
+        <ambientLight intensity={1} />
+        <spotLight intensity={0.3} angle={0.1} penumbra={1} position={[10, 10, 20]} />
         <Suspense fallback={null}>
+          <Environment preset="city" />
           <Shoe />
-          <Environment files="royal_esplanade_1k.hdr" />
-          <ContactShadows rotation-x={Math.PI / 2} position={[0, -0.8, 0]} opacity={0.25} width={10} height={10} blur={2} far={1} />
+          <ContactShadows scale={150}
+          position={[0.33, -0.33, 0.33]}
+          opacity={1.5} />
         </Suspense>
-        <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={false} enablePan={false} />
+        <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={true} enablePan={false} />
       </Canvas>
       <Picker />
     </>
