@@ -25,7 +25,7 @@ a:hover {
 html,
 body,
 #root {
-    position: relative;
+  position: relative;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -36,15 +36,12 @@ body,
 
 body {
   background: white;
-  font-family: "Inter var", sans-serif;
+  font-family: 'Inter var', sans-serif;
   display: flex;
   justify-content: center;
 }
 
 h1 {
-  position: absolute;
-  top: 43px;
-  left: 140px;
   padding: 0;
   margin: 40px;
   font-size: 5em;
@@ -53,10 +50,16 @@ h1 {
   color: #272730;
 }
 
+.pickerWrapper {
+  width: fit-content;
+  align-items: center;
+  position: absolute;
+  top: 8%;
+  left: 45%;
+  right: 0;
+}
+
 .picker {
-  position: absolute !important;
-  top: 74px;
-  left: 70px;
   width: 90px !important;
   height: 90px !important;
 }
